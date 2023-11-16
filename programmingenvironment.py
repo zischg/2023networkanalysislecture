@@ -18,9 +18,11 @@ G.add_node("input data") #data stored on local disc that a code can read
 G.add_node("output data") #data (files) created by the execution of a code
 G.add_node("directory") #storage
 G.add_node("local repository") #a code repository stored at local harddisc, available offline
+G.add_node("Python library")
 
 #add edges
 G.add_edge("Python script","Python interpreter") #Python script is executed by interpreter
+G.add_edge("Python library", "Python interpreter") #a Python library is added to the Python interpreter (e.g., import networkx)
 G.add_edge("directory", "Python script") #Python script is a file stored in directory
 G.add_edge("Python script","directory")  #if Python script is edited, directory is modified
 G.add_edge("Python script","local repository")  #if Python script is edited, local repository is modified
