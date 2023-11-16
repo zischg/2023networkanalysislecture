@@ -8,7 +8,7 @@ import matplotlib.cm as cm
 
 
 #general workspace settings
-myworkspace="C:/DATA/develops/LiteratureAnalysis"
+myworkspace="C:/DATA"
 
 #input data: the txt file with all the papers of the GIUB with GIUB-professors as co-authors. Exported from BORIS.unibe.ch
 papersfile=open(myworkspace+"/papersGIUB.txt", "r", encoding='iso-8859-1')
@@ -47,6 +47,7 @@ print(coauthorships)
 #create a graph
 plt.figure(figsize=(15, 15))
 nx.draw_shell(G, with_labels=True,)
+plt.show()
 
 
 #calculate centrality
@@ -63,8 +64,6 @@ nx.voterank(G,15)
 #Closeness centrality [1] of a node u is the reciprocal of the average shortest path distance to u over all n-1 reachable nodes.
 print(nx.closeness_centrality(G, u=None, distance=None, wf_improved=True))
 
-
-
 #write the Graphml for Gephi
 nx.write_graphml(G, myworkspace+"/papersGIUB_graphml.graphml")
 
@@ -79,13 +78,14 @@ plt.colorbar(scalarmappaple)
 pos = nx.spring_layout(G)#pos = nx.draw_circular(G)
 nx.draw(G, pos, node_size=sizes, node_color=sizes, cmap=colormap,with_labels=True,)
 plt.show()
+plt.title("degree centrality")
 
-nx.draw(G, pos, with_labels=True,)
-plt.show()
+#nx.draw(G, pos, with_labels=True,)
+#plt.show()
 
-
+#try different graph visualization types
 nx.draw(G, with_labels=True,)
 nx.draw_circular(G, with_labels=True,)
 nx.draw_spectral(G, with_labels=True,)
 nx.draw_spring(G, with_labels=True,)
-nx.draw(nx.degree_centrality(G), with_labels=True,)
+
