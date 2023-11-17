@@ -18,7 +18,7 @@ G.add_node("input data") #data stored on local disc that a code can read
 G.add_node("output data") #data (files) created by the execution of a code
 G.add_node("directory") #storage
 G.add_node("local repository") #a code repository stored at local harddisc, available offline
-G.add_node("Python library")
+G.add_node("Python library") #example is networkx
 
 #add edges
 G.add_edge("Python script","Python interpreter") #Python script is executed by interpreter
