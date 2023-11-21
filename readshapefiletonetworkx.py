@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import osmnx as ox
 import pandas as pd
 from shapely.geometry import LineString
+from shapely.geometry import Point
 
 #function to test
 def convert_shp2graph(p, make_G_bidi=True, name='unamed'):
@@ -89,7 +90,7 @@ def convert_shp2graph(p, make_G_bidi=True, name='unamed'):
     #     log('Show graph data structure NODE'.format(list(G.nodes())[0]))
     return G
 
-graph= convert_shp2graph("C:/DATA/BEroads2021sp_extract.shp", make_G_bidi=True, name ="graphname")
+#graph= convert_shp2graph("C:/DATA/BEroads2021sp_extract.shp", make_G_bidi=True, name ="graphname")
 
 
 #import the street dataset
@@ -97,6 +98,13 @@ graph= convert_shp2graph("C:/DATA/BEroads2021sp_extract.shp", make_G_bidi=True, 
 #streets = gpd.read_file("C:/DATA/BEroads2021sp_extract.shp", layer='BEroads2021sp_extract')
 streets = gpd.read_file("C:/DATA/BEroads2021sp.shp", layer='BEroads2021sp')
 len(streets)
+#add x and y coordinates of startpoint and endpoint
+for index, row in streets.iterrows():
+    coords = [(coords) for coords in list(row['geometry'].coords)]
+    first_coord, last_coord = [ coords[i] for i in (0, -1) ]
+    streets.at[index,'first'] = Point(first_coord)
+    streets.at[index,'last'] = Point(last_coord)
+
 
 #plot
 f, ax = plt.subplots(figsize=(10, 10))
