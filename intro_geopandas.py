@@ -9,11 +9,12 @@ import pyproj
 import rtree
 import shapely
 import geopandas as gpd
+import descartes
 
 #read geodata
 myworkspace="C:/DATA"
 #read Swiss cantons
-cantons_gdf=gpd.read_file(myworkspace+"/"+"ch_kantone.shp")
+cantons_gdf=gpd.read_file(myworkspace+"/"+"ch_kantone_sp.shp")
 #show attribute table
 cantons_gdf.head()
 #check columns
@@ -37,13 +38,15 @@ cantons_gdf["area_km2"]=cantons_gdf.area/1000000
 #add a column
 cantons_gdf["popdensity"]=cantons_gdf["EINWOHNERZ"]/cantons_gdf["area_km2"]
 cantons_gdf.plot('popdensity', legend=True)
-
+cantons_gdf.to_file(myworkspace+"/ch_cantons.gpkg", layer='ch_cantons', driver="GPKG")
+cantons_gdf=gpd.read_file(myworkspace+"/ch_cantons.gpkg",layer='ch_cantons')
 #read hydropower stations
-hydropowerstations_gdf=gpd.read_file(myworkspace+"/"+"ch_hydropowerplants.shp")
+hydropowerstations_gdf=gpd.read_file(myworkspace+"/"+"ch_hydropowerplants_sp.shp")
 hydropowerstations_gdf.crs
 hydropowerstations_gdf.plot()
 #re-project from LV03 to LV95 (EPSG = 2056)
-hydropowerstations_gdf_LV95=hydropowerstations_gdf.to_crs("EPSG:2056")
+hydropowerstations_gdf_LV95=hydropowerstations_gdf.to_crs(crs="EPSG:2056")
+hydropowerstations_gdf_LV95=hydropowerstations_gdf.to_crs(epsg=2056)
 hydropowerstations_gdf_LV95.plot()
 
 
@@ -59,9 +62,11 @@ hydropowerstations_gdf_buffer.plot()
 ax=cantons_gdf.plot()
 ax.set_title("hydropower stations in Swiss Cantons")
 hydropowerstations_gdf_LV95.plot(ax=ax, marker='o', color='red', markersize=5)
-
+hydropowerstations_gdf_LV95=gpd.read_file(myworkspace+"/"+"ch_hydropowerplantsLV95.shp")
 #overlay between hydropower stations and cantons
-hydropower_cantons=gpd.overlay(hydropowerstations_gdf_LV95, cantons_gdf, how="intersection")
+#hydropower_cantons=gpd.overlay(hydropowerstations_gdf_LV95, cantons_gdf, how="intersection")
+#hydropower_cantons=gpd.overlay(hydropowerstations_gdf_LV95,cantons_gdf, how='intersection', keep_geom_type=False)
+hydropower_cantons=gpd.sjoin(hydropowerstations_gdf_LV95,cantons_gdf,how='inner')
 hydropower_cantons.plot()
 
 #calculate how many hydropower stations are located in each Canton
